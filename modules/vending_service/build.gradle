@@ -1,0 +1,16 @@
+plugins {
+id 'java'
+id 'vending_machine.java-common-conventions'
+}
+
+/*
+if(project.hasProperty('root')) {
+		apply plugin:'vending_machine.java-common-conventions'
+}
+*/
+
+
+dependencies {
+	implementation project(':modules:vending_model')
+	
+}

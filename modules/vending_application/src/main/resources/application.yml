@@ -1,0 +1,6 @@
+server.servlet.context-path: /api/v1
+server.port: ${port:8080}
+
+---
+spring.profiles: docker
+server.port: 8080

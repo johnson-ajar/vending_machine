@@ -1,0 +1,11 @@
+server.servlet.context-path: /vending
+server.port: ${port:8081}
+
+---
+spring.profiles: docker
+server.port: 8080
+
+app:
+ application:
+  host: vending_monitor
+  port: 8080
