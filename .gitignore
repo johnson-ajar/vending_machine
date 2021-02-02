@@ -10,6 +10,7 @@ IEDS-UI.html
 IEDS-UI_files
 .gradle
 /build/
+/modules/vending_ui/webclient/yarn.lock
 
 # Ignore Gradle GUI config
 gradle-app.setting
