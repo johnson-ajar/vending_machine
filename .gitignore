@@ -22,3 +22,13 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+modules/vending_ui/webclient/node_modules
+bin
+dist
+IEDS-UI.html
+IEDS-UI_files
