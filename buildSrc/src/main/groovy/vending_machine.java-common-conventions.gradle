@@ -5,11 +5,16 @@
 plugins {
     // Apply the java Plugin to add support for Java.
     id 'java'
+    id 'maven'
 }
 
 repositories {
     // Use JCenter for resolving dependencies.
     jcenter()
+    mavenCentral()
+    maven{
+    	url "https://maven.springframework.org/release"
+    }
 }
 
 configurations {
@@ -17,6 +22,9 @@ configurations {
 		exclude group:'org.springframework.boot', module: 'spring-boot-starter-logging'
 	}
 }
+
+sourceCompatibility=1.8
+targetCompatibility=1.8
 
 dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:$junit5_VERSION'
