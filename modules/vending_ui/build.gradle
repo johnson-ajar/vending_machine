@@ -17,6 +17,7 @@ node {
 //If true will download node using above parameter.
 //If false will try to use globally installed node.
 download = false
+version = "12.6.3"
 nodeModulesDir = file("${project.projectDir}/webclient")
 }
 
