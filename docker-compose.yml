@@ -1,0 +1,26 @@
+version: '2.1'
+
+services:
+#################### VENDING MONITOR SERVICE #############
+ vending_monitor:
+  image: vending/application
+  ports:
+   - "8080:8080"
+  build: 
+   context: modules/vending_application
+   dockerfile: Dockerfile
+  mem_limit: 350m
+  environment:
+   - SPRING_PROFILES_ACTIVE=docker
+ ################### VENDING UI SERVICE ################
+ vending_ui:
+  image: vending/ui
+  ports:
+   - "8081:8080"
+  build:
+   context: modules/vending_ui
+   dockerfile: Dockerfile
+  mem_limit: 350m
+  environment:
+   - SPRING_PROFILES_ACTIVE=docker
+   
