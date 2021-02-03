@@ -1,6 +1,6 @@
 ## Vending Machine Monitoring Application
 
-##Application Modules.
+## Application Modules.
 This application contain the following modules under the root folder vending_machine.
 >	- vending_model
 >	- vending_service
@@ -30,8 +30,21 @@ Spring hateoas would be used to add related links within the response data.
  
 ### 4. Module (vending_ui)
 > This is a separate sping boot application which run the rich web application. This can be used to interact with each machine and monitor the registries of each machine. After running gradle build at root. Run `java -jar vending_ui.jar` in folder `vending_machine/modules/vending_ui/build/libs`, use the following url to open the application `http://localhost:8081/vending`. This module contain two source folder src and webclient. src folder contain the java code and webclient contain the javascript web client code. The content in the webclient folder can be build and run separately without the need for spring boot using node using. Check package.json the command available. To build run `yarn build`. To run application use `yarn start`. The application can be opened using the  url `http://localhost:8081/vending/`.
+>> To compile the web application code nodejs, yarn and npm is required globally. The instruction provided below are for installing in ubuntu.
+>> To install nodejs from Nodesource. 
+>> The script will add the Node source signing key to your system create an apt repository file, install all necessary package, and refresh apt cache.
 
-##Building and Running the Application.
+>>>> `curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -`
+
+>> Once NodeSource repository is enabled. install Node.js and npm.
+
+>>>> `sudo apt-get install nodejs`
+
+>>>> `npm to install yarn`
+
+>>>> `sudo npm install --force --global yarn`
+
+## Building and Running the Application.
 ### 1. Build the application.
 To build the two application vending_application, vending_ui, go to the root folder vending_machine and run `./gradlew build`. The build should compile and build all the modules. The vending_application provides the rest service and vending_ui provides a UI interface to test the rest api as well as the java api.
 There are several ways to run this application and test it.

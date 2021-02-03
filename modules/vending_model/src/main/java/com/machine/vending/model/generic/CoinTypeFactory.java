@@ -6,10 +6,10 @@ import com.machine.vending.model.common.CoinGroup;
 
 public class CoinTypeFactory {
 	
-	public static <R extends AbstractCoinRegistry> R createRegistry(CoinGroup group) {
+	public static <R extends AbstractCoinRegistry> R createRegistry(CoinGroup group, boolean isEmpty) {
 		switch(group) {
 			case UK:
-				return (R)new CoinRegistry();
+				return (R)(isEmpty?new CoinRegistry(CoinGroup.UK):CoinRegistry.getDefault(CoinGroup.UK));
 			case US:
 				return null;
 		}
@@ -20,7 +20,7 @@ public class CoinTypeFactory {
 	public static <R extends AbstractCoinRegistry, B extends AbstractVendingBank<R>> B createVendingBank(CoinGroup group) {
 		switch(group) {
 			case UK:
-				return (B) new VendingBank();
+				return (B) new VendingBank(group);
 			case US:
 				return null;
 		}

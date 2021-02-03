@@ -3,6 +3,7 @@ package com.machine.vending.model.generic;
 import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.common.EntityToModelAdapter;
 import com.machine.vending.model.entity.VendingMachineEntity;
+import com.machine.vending.model.exception.InsufficientFundsException;
 import com.machine.vending.model.exception.InsufficientPaymentException;
 
 public abstract class AbstractVendingMachine<R extends AbstractCoinRegistry, B extends AbstractVendingBank<R>> implements EntityToModelAdapter<AbstractVendingMachine<R,B>, VendingMachineEntity> {
@@ -23,6 +24,10 @@ public abstract class AbstractVendingMachine<R extends AbstractCoinRegistry, B e
 		bank.setMachineRegistry(coins);
 	}
 	
+	public void setUserRegistry(R coins) {
+		bank.setUserRegistry(coins);
+	}
+	
 	public R getMachineRegistry() {
 		return bank.getMachineRegistry();
 	}
@@ -35,7 +40,7 @@ public abstract class AbstractVendingMachine<R extends AbstractCoinRegistry, B e
 		return bank.getUserRegistry();
 	}
 	
-	public R makePayment(Double amount, R registry) throws InsufficientPaymentException {
+	public R makePayment(Double amount, R registry) throws InsufficientPaymentException, InsufficientFundsException {
 		return bank.makePayment(amount, registry);
 	}
 	

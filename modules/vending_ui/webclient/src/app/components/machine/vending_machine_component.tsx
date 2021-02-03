@@ -6,7 +6,7 @@ import {CoinRegistry} from '../../../model/coin_registry';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import SelectMachineComponent from './select_machine_component';
-import {Table,Button} from 'react-bootstrap';
+import {Table,Button, Alert} from 'react-bootstrap';
 import {coins, useCoinType, getCoinByCountry} from '../../../model/coin_type';
 
 
@@ -15,6 +15,7 @@ export interface VendingMachineState {
     selectedMachine:VendingMachine;
     coinChange:CoinRegistry;
     isMachineChanged: boolean;
+    errors:Error[];
 }
 
 export type VendingMachineProps = {
@@ -22,13 +23,16 @@ export type VendingMachineProps = {
     getMachines: ()=>any;
     selectMachine:(machine:VendingMachine)=>any;
     submitPayment:(machine_name:string, amount:number, payment:CoinRegistry)=>any;
-    setMachineChanged:(changed:boolean)=>any
+    setMachineChanged:(changed:boolean)=>any;
+    resetChangeRegistry:()=>any;
+    emptyErrorMessages:()=>any;
 }
 
 interface MachineRegistryState extends VendingMachineState {
    paymentRegistry:CoinRegistry,
    purchaseAmount:number,
-   hasBalance:boolean
+   hasBalance:boolean,
+   showError:boolean
 }
 
 export class VendingMachineComponent extends React.Component<VendingMachineProps, MachineRegistryState> {
@@ -42,18 +46,21 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
             selectedMachine: new VendingMachine(),
             purchaseAmount: 0.0,
             hasBalance: false,
-            isMachineChanged: false
+            isMachineChanged: false,
+            errors:[],
+            showError:true
         };
-
         this.getMachines = this.getMachines.bind(this);
         this.displaySelectedMachineName = this.displaySelectedMachineName.bind(this);
         this.incrementPayment = this.incrementPayment.bind(this);
+        this.makePurchase = this.makePurchase.bind(this);
         this.calculatePurchaseAmount = this.calculatePurchaseAmount.bind(this);
         this.submitPayment = this.submitPayment.bind(this);
         this.calculateBalance = this.calculateBalance.bind(this);
         this.displaySelectedMachine = this.displaySelectedMachine.bind(this);
         this.displayMachineSelectionMenu = this.displayMachineSelectionMenu.bind(this);
         this.collectChange = this.collectChange.bind(this);
+        this.closeErrorMessage = this.closeErrorMessage.bind(this);
     }
     public componentDidUpdate() {
        
@@ -84,14 +91,16 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
         );
     }
     
-    private calculatePurchaseAmount(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    private calculatePurchaseAmount(e:React.MouseEvent<HTMLElement, MouseEvent>) {
         let min:number = 2;
         let max:number = 10;
         let value = Math.random()*(max-min);
+        this.props.resetChangeRegistry();
         this.setState({
             ...this.state,
             purchaseAmount: value,
             coinChange: new CoinRegistry(getCoinByCountry(useCoinType)),
+            paymentRegistry: new CoinRegistry(getCoinByCountry(useCoinType)),
             hasBalance: false,
         });
     }
@@ -103,7 +112,7 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
                 <td>Amount Purchased</td>
                 <td>
                     {purchaseValue.toLocaleString(undefined, {maximumFractionDigits:2})}
-                    <Button style={{marginLeft:"30px"}} onClick={this.calculatePurchaseAmount}>Make Purchase</Button>
+                    <Button style={{marginLeft:"30px"}} onClick={e => this.calculatePurchaseAmount(e)}>Make Purchase</Button>
                 </td>
             </tr>
         );
@@ -112,7 +121,6 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
     private incrementPayment(e:React.MouseEvent<HTMLButtonElement, MouseEvent>){
         let tmpRegistry:CoinRegistry = this.state.paymentRegistry;
         tmpRegistry.setCoin(e.currentTarget.name,tmpRegistry.getNoCoin(e.currentTarget.name)+1);
-        //let hasBalance = this.calculateBalance()>=0?true:false;
         this.setState({
             ...this.state,
             paymentRegistry:tmpRegistry,
@@ -130,14 +138,16 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
        if(hasBalance) {
            //If the payment is right call payment function of the service.
            //Make sure the machine state is reset.
+           console.log("Submitting payment...");
            this.props.submitPayment(this.props.machineState.selectedMachine.getName(), this.state.purchaseAmount, this.state.paymentRegistry);
-           console.log("Reset the state after submitting the payment if it is correct");
-           //this.props.setRegistryChanged(!this.props.machineState.isMachineChanged);
+           console.log(this.props.machineState.errors);
            this.setState({
                ...this.state,
                purchaseAmount:0.0,
-               paymentRegistry:new CoinRegistry(coins[useCoinType]),
-               hasBalance:false
+               paymentRegistry: new CoinRegistry(getCoinByCountry(useCoinType)),
+               coinChange: new CoinRegistry(getCoinByCountry(useCoinType)), //this.props.machineState.coinChange,
+               hasBalance:false,
+               errors: []
            });
        } 
     }  
@@ -178,8 +188,10 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
     }
     private makePayment(country:string) {
         let coins = getCoinByCountry(country);
-        let disablePayment:boolean = this.state !== null && this.state.purchaseAmount > 0.0 ? false : true;
+        let disableIncrementPayment:boolean = this.state !== null && this.state.purchaseAmount > 0.0  ? false : true;
         let balance:number = this.calculateBalance();
+        let disablePaymentSubmit:boolean = balance<0 ? true: false;
+       
         return(
             <tr>
                 <td>Make Payment (Press Coin)</td>
@@ -192,7 +204,7 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
                             style={{marginRight:"10px"}} 
                             name={coin_name} 
                             key={coin_name} 
-                            disabled={disablePayment}
+                            disabled={disableIncrementPayment}
                             onClick={this.incrementPayment}>{coin_display+" : "+this.noCoins(coin_name)}
                         </Button>);
                     })}
@@ -207,7 +219,7 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
                     </span>
                     <Button 
                     style={{marginTop:"20px", marginLeft:"100px"}}
-                    disabled={disablePayment}
+                    disabled={disablePaymentSubmit}
                      onClick={this.submitPayment}>
                          Submit Payment
                     </Button>
@@ -220,12 +232,14 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
     }
 
     private collectChange() {
+        
         let changeCoins = this.props.machineState.coinChange.getCoins();
-        console.log(changeCoins);
+        console.log(this.props.machineState.coinChange);
         let cCoins = getCoinByCountry(useCoinType);
         return(
             <tr>
-                <td>Collect Change</td>
+                <td>Collect Change <div>{this.state.purchaseAmount}</div></td>
+                
                 <td>
                 {Object.keys(changeCoins).map(key=>{
                         return(<b key={key}>
@@ -257,10 +271,32 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
         return(<></>)
     }
 
+    private closeErrorMessage(e:any) {
+       this.props.emptyErrorMessages();
+        this.setState({
+            ...this.state,
+           showError:false
+        });
+    }
+
+    private popErrors() {
+        if(!this.state.showError){
+            return(<></>)
+        }
+        return this.props.machineState.errors.map((e:Error, index:number)=>{
+            return(<Alert key={index} variant="danger" onClose={(e)=>{this.closeErrorMessage(e)}} dismissible>
+                <Alert.Heading>Error</Alert.Heading>
+                <p>{e.message}</p>
+            </Alert>)
+         });
+    }
+
     public render() {
+        console.log(this.props.machineState.errors);
+      
         return(
             <div>
-                
+                {this.popErrors()}
                 <Table striped bordered hover>
                     <tbody>
                     <tr>
@@ -285,7 +321,10 @@ const mapDispatchToProps = (dispatch:Dispatch) => bindActionCreators({
     getMachines: actionCreators.machine.getMachines,
     selectMachine: actionCreators.machine.selectMachine,
     submitPayment: actionCreators.machine.submitPayment,
-    setMachineChanged: actionCreators.machine.setMachineChanged
+    setMachineChanged: actionCreators.machine.setMachineChanged,
+    updateMachineRegistry: actionCreators.machine.updateMachineRegistry,
+    resetChangeRegistry: actionCreators.machine.resetChangeRegistry,
+    emptyErrorMessages: actionCreators.machine.emptyErrorMessages
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(VendingMachineComponent);
