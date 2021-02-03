@@ -1,16 +1,22 @@
 import * as Actions from '../actions/machine_action';
 import {VendingMachineState} from '../../app/components/machine/vending_machine_component';
-import {GET_MACHINES_FULFILLED, HAS_MACHINE_CHANGED, SELECT_MACHINE_FULFILLED, SUBMIT_PAYMENT_FULFILLED} from '../action_types/machine_action_type';
 import { VendingMachine } from '../../model/vending_machine';
 import { CoinRegistry } from '../../model/coin_registry';
-import {coins, useCoinType} from '../../model/coin_type';
-import { MachineBank } from '../../model/machine_bank';
+import {coins, getCoinByCountry, useCoinType} from '../../model/coin_type';
+import {EMPTY_MACHINE_ERRORS, GET_MACHINES_FULFILLED, HAS_MACHINE_CHANGED,
+    SELECT_MACHINE_FULFILLED,
+    RESET_CHANGE_REGISTRY,
+    SUBMIT_PAYMENT_FULFILLED,
+    SUBMIT_PAYMENT_REJECTED,
+    UPDATE_MACHINE_REGISTRY_FULFILLED} from '../action_types/machine_action_type';
+
 
 let initialState:VendingMachineState = {
    machines:[],
    selectedMachine: new VendingMachine(),
    coinChange: new CoinRegistry(coins[useCoinType]),
-   isMachineChanged:false
+   isMachineChanged:false,
+   errors:[]
 }
 export function reducers (state:VendingMachineState = initialState, action:Actions.Action){
     console.log(action);
@@ -25,11 +31,14 @@ export function reducers (state:VendingMachineState = initialState, action:Actio
             }
         break;
         case SUBMIT_PAYMENT_FULFILLED:
-            console.log("Submit Payment reducer.....");
-            console.log(action.payload);
-            let bank = new MachineBank();
-            bank.setMachineRegistry(action.payload.machineRegistry);
-            bank.setUserRegistry(action.payload.userRegistry);
+            partialState = {
+                ...state,
+                coinChange: action.payload.coinChange,
+                selectedMachine: action.payload.selectedMachine,
+                errors: action.payload.errors
+            }
+        break;
+        case SUBMIT_PAYMENT_REJECTED:
             partialState = {
                 ...state,
                 coinChange: action.payload.coinChange,
@@ -44,10 +53,29 @@ export function reducers (state:VendingMachineState = initialState, action:Actio
                 selectedMachine:action.payload.selectedMachine as VendingMachine
             }
         break;
+        case UPDATE_MACHINE_REGISTRY_FULFILLED:
+            console.log(action.payload)
+            partialState = {
+                ...state,
+                selectedMachine:action.payload.updatedMachine as VendingMachine
+            }
+        break;
         case HAS_MACHINE_CHANGED:
             partialState = {
                 ...state,
                 isMachineChanged:action.payload.hasMachineChanged
+            }
+        break;
+        case RESET_CHANGE_REGISTRY:
+            partialState = {
+                ...state,
+                coinChange:new CoinRegistry(getCoinByCountry(useCoinType))
+            }
+        break;
+        case EMPTY_MACHINE_ERRORS:
+            partialState = {
+                ...state,
+                errors:action.payload.error
             }
         break;
     }

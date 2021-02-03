@@ -57,10 +57,13 @@ public interface VendingMachineChangeService {
 			description = "A newly created machine will have a default coin registry. Use this api to update the coin registry.")
 	@ApiResponses(value= {
 			@ApiResponse(responseCode = "200", description="successfully updated vending machine coin registry", content = @Content(schema=@Schema(implementation=VendingMachineEntity.class))),
-			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=VendingMachineEntity.class)))
+			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=VendingMachineEntity.class))),
+			@ApiResponse(responseCode = "400", description="If the machine name passed is invalid or request body of the updating registry is invalid ", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class)))
 	})
 	@PutMapping(value="/machine/{name}/registry")
-	ResponseEntity<VendingMachineEntity> updateMachineCoinRegistry(@PathVariable String name, @RequestBody CoinRegistryEntity registry);
+	ResponseEntity<VendingMachineEntity> updateCoinRegistry(@PathVariable String name,
+				@RequestParam(value="type", required=true)String type,
+				@RequestBody CoinRegistryEntity registry);
 	
 	/**
 	 * 
@@ -70,7 +73,8 @@ public interface VendingMachineChangeService {
 			description = "Get a machine using its name, if not found please create one.")
 	@ApiResponses(value= {
 			@ApiResponse(responseCode = "200", description="The machine has been found", content = @Content(schema=@Schema(implementation=VendingMachineEntity.class))),
-			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=VendingMachineEntity.class)))
+			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=VendingMachineEntity.class))),
+			@ApiResponse(responseCode = "400", description="The machine name passed is invalid", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class)))
 	})
 	@GetMapping(value="/machine/{name}",
 			produces = "application/json")
@@ -84,7 +88,8 @@ public interface VendingMachineChangeService {
 			description="Use the name of the machine to get the details about the coin registy.")
 	@ApiResponses(value= {
 			@ApiResponse(responseCode = "200", description="The machine coin registry has been obtained.", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class))),
-			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class)))
+			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class))),
+			@ApiResponse(responseCode = "400", description="The machine name passed is invalid", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class)))
 	})
 	@GetMapping(value="/machine/{name}/coins",
 			produces = "application/json")
@@ -97,7 +102,8 @@ public interface VendingMachineChangeService {
 			description = "Use the name of the machine to get the details about the user coin registry")
 	@ApiResponses(value= {
 			@ApiResponse(responseCode = "200", description="The machine user coin registry has been obtained.", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class))),
-			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class)))
+			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class))),
+			@ApiResponse(responseCode = "400", description="The machine name passed is invalid", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class)))
 	})
 	@GetMapping(value="/machine/{name}/user/coins",
 			produces ="application/json")
@@ -117,7 +123,8 @@ public interface VendingMachineChangeService {
 	@ApiResponses(value= {
 			@ApiResponse(responseCode = "200", description="The machine has update the machine and user coin registry and return the change.", 
 					content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class))),
-			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class)))
+			@ApiResponse(responseCode = "404", description="The machine cannot be found", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class))),
+			@ApiResponse(responseCode = "400", description="The parameter passed is invalid or payment amount is insufficient or not enough funds in machine registry.", content = @Content(schema=@Schema(implementation=CoinRegistryEntity.class)))
 	})
 	@PutMapping(value="/machine/{name}/payment",
 			consumes="application/json",

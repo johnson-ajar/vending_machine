@@ -29,7 +29,7 @@ public final class VendingBankEntity {
 	}
 	
 	public Double getTotalAmount() {
-		return this.totalAmount;
+		return this.machineRegistry.getAmount()+this.userRegistry.getAmount();
 	}
 	
 	public void setTotalAmount(Double amount) {

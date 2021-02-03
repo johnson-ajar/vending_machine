@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.machine.vending.model.common.RegistryType;
 import com.machine.vending.model.exception.DuplicateMachineException;
+import com.machine.vending.model.exception.InsufficientFundsException;
 import com.machine.vending.model.exception.InsufficientPaymentException;
 import com.machine.vending.model.exception.InvalidParameterException;
+import com.machine.vending.model.exception.InvalidRegistryException;
 import com.machine.vending.model.exception.MachineNotFoundException;
 import com.machine.vending.model.generic.AbstractCoinRegistry;
 import com.machine.vending.model.generic.AbstractVendingBank;
@@ -34,7 +37,7 @@ public abstract class AbstractMachineMonitor<R extends AbstractCoinRegistry, B e
 		}
 		throw new  MachineNotFoundException(name);
 	}
-
+   
 	@Override
 	public M addMachine(M machine) throws DuplicateMachineException, InvalidParameterException {
 		GenericParameterCheck.check("machine", machine);
@@ -55,11 +58,21 @@ public abstract class AbstractMachineMonitor<R extends AbstractCoinRegistry, B e
 	}
 
 	@Override
-	public M updateMachineCoinRegistry(String name, R registry) throws InvalidParameterException, MachineNotFoundException {
+	public M updateRegistry(String name, String type, R registry) throws InvalidParameterException, MachineNotFoundException, InvalidRegistryException {
 		GenericParameterCheck.check("name",name);
 		GenericParameterCheck.check("registry", registry);
 		M machine = this.getMachine(name);
-		machine.setMachineRegistry(registry);
+		RegistryType rType = RegistryType.getType(type);
+		switch(rType) {
+			case MACHINE:
+				machine.setMachineRegistry(registry);
+			break;
+			case USER:
+				machine.setUserRegistry(registry);
+			break;
+			case UNDEFINED:
+				throw new InvalidRegistryException(name, type);
+		}
 		this.machines.put(name, machine);
 		return machine;
 	}
@@ -90,7 +103,7 @@ public abstract class AbstractMachineMonitor<R extends AbstractCoinRegistry, B e
 	}
 
 	@Override
-	public R makePayment(String machine_name, Double amount, R payment) throws InvalidParameterException, MachineNotFoundException, InsufficientPaymentException {
+	public R makePayment(String machine_name, Double amount, R payment) throws InvalidParameterException, MachineNotFoundException, InsufficientPaymentException, InsufficientFundsException {
 		GenericParameterCheck.check("machine_name", machine_name);
 		GenericParameterCheck.check("name", amount);
 		GenericParameterCheck.check("payment", payment);

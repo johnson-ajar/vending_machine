@@ -4,25 +4,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.convert.converter.Converter;
-
+import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.common.CoinType;
 import com.machine.vending.model.common.EntityToModelAdapter;
 import com.machine.vending.model.entity.CoinRegistryEntity;
 
-public abstract class AbstractCoinRegistry implements EntityToModelAdapter<AbstractCoinRegistry, CoinRegistryEntity> {
+public abstract class AbstractCoinRegistry implements EntityToModelAdapter<AbstractCoinRegistry, CoinRegistryEntity>, Cloneable {
+	
 	private Map<CoinType, Integer> coinStore = new HashMap<CoinType, Integer>();
 	private Double amount  = 0.0;
 	public AbstractCoinRegistry() {
 		coinTypes().stream().forEach(type -> setCoins(type, 0));
 	}
 	
-	private AbstractCoinRegistry(AbstractCoinRegistry registry) {
-		coinTypes().stream().forEach(type -> setCoins(type, 0));
+	//Replace the registry with the passed registry content.
+	protected AbstractCoinRegistry(AbstractCoinRegistry registry) {
+		coinTypes().stream().forEach(type -> setCoins(type, registry.getCoins(type)));
 		this.getAmount();
 	}
 	
 	protected abstract List<CoinType> coinTypes();
+	
+	protected abstract CoinGroup getGroup();
 	
 	@Override
 	public CoinRegistryEntity entity() {
@@ -46,8 +49,10 @@ public abstract class AbstractCoinRegistry implements EntityToModelAdapter<Abstr
 		this.getAmount();
 	}
 	
-	public void setCoins(CoinType type, Integer noCoins) {
+	public AbstractCoinRegistry setCoins(CoinType type, Integer noCoins) {
 		this.coinStore.put(type, noCoins);
+		this.getAmount();
+		return this;
 	}
 	
 	public Integer getCoins(CoinType type) {
@@ -79,9 +84,11 @@ public abstract class AbstractCoinRegistry implements EntityToModelAdapter<Abstr
 		return this.amount/100.0;
 	}
 	
+	
 	@Override
 	public AbstractCoinRegistry clone() {
 		final List<CoinType> types = this.coinTypes();
+		final CoinGroup grp = this.getGroup();
 		AbstractCoinRegistry copy = new AbstractCoinRegistry(this) {
 
 			@Override
@@ -89,10 +96,16 @@ public abstract class AbstractCoinRegistry implements EntityToModelAdapter<Abstr
 				return types;
 			}
 
+			@Override
+			protected CoinGroup getGroup() {
+				return grp;
+			}
+
 		};
 		return copy;
 	}
-
+	
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -102,4 +115,36 @@ public abstract class AbstractCoinRegistry implements EntityToModelAdapter<Abstr
 		return builder.toString();
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
+		result = prime * result + ((coinStore == null) ? 0 : coinStore.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractCoinRegistry other = (AbstractCoinRegistry) obj;
+		if (amount == null) {
+			if (other.amount != null)
+				return false;
+		} else if (!amount.equals(other.amount))
+			return false;
+		if (coinStore == null) {
+			if (other.coinStore != null)
+				return false;
+		} else if (!coinStore.equals(other.coinStore))
+			return false;
+		return true;
+	}
+
+
 }

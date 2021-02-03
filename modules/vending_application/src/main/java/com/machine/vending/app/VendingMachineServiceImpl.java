@@ -16,8 +16,10 @@ import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.entity.CoinRegistryEntity;
 import com.machine.vending.model.entity.VendingMachineEntity;
 import com.machine.vending.model.exception.DuplicateMachineException;
+import com.machine.vending.model.exception.InsufficientFundsException;
 import com.machine.vending.model.exception.InsufficientPaymentException;
 import com.machine.vending.model.exception.InvalidParameterException;
+import com.machine.vending.model.exception.InvalidRegistryException;
 import com.machine.vending.model.exception.MachineNotFoundException;
 import com.machine.vending.model.generic.CoinTypeFactory;
 import com.machine.vending.model.monitor.VendingMachineMonitor;
@@ -31,7 +33,7 @@ public class VendingMachineServiceImpl implements VendingMachineChangeService{
 	
 	//TODO This can be changed based on user preference when the service need to support
 	//other coin groups.
-	private final CoinGroup useGroup = CoinGroup.UK;
+	private final CoinGroup useGroup = InitialiseVendingMachine.useGroup;
 	
 	@Override
 	public ResponseEntity<List<VendingMachineEntity>> getMachines() {
@@ -45,7 +47,7 @@ public class VendingMachineServiceImpl implements VendingMachineChangeService{
 	public ResponseEntity<VendingMachineEntity> addVendingMachine(String name) {
 		LOG.info("Adding a new vending machine to be monitor service");
 		VendingMachine machine = new VendingMachine(name, useGroup);
-		machine.setMachineRegistry(CoinRegistry.getDefault());
+		machine.setMachineRegistry(CoinRegistry.getDefault(useGroup));
 		try {
 			machine = monitor.addMachine(machine);
 		} catch (DuplicateMachineException e) {
@@ -57,13 +59,13 @@ public class VendingMachineServiceImpl implements VendingMachineChangeService{
 	}
 
 	@Override
-	public ResponseEntity<VendingMachineEntity> updateMachineCoinRegistry(String name, CoinRegistryEntity registry) {
-		LOG.info("Updating a vending machine coin registry");
+	public ResponseEntity<VendingMachineEntity> updateCoinRegistry(String name, String type, CoinRegistryEntity registry) {
+		LOG.info(String.format("Updating a vending machine %s coin registry %s ", name, type));
 		try {
 			//TODO: Use a factory method to create
-			CoinRegistry ukRegistry = CoinTypeFactory.createRegistry(useGroup);
+			CoinRegistry ukRegistry = CoinTypeFactory.createRegistry(useGroup, true);
 			ukRegistry.populate(registry);
-			VendingMachine machine = monitor.updateMachineCoinRegistry(name, ukRegistry);
+			VendingMachine machine = monitor.updateRegistry(name, type.trim(), ukRegistry);
 			return new ResponseEntity<VendingMachineEntity>(machine.entity(), HttpStatus.OK);
 		} catch(InvalidParameterException e) {
 			LOG.error(String.format("%s", e.getMessage()));
@@ -71,6 +73,9 @@ public class VendingMachineServiceImpl implements VendingMachineChangeService{
 		} catch(MachineNotFoundException e) {
 			LOG.error(String.format("%s", e.getMessage()));
 			return new ResponseEntity<VendingMachineEntity>(HttpStatus.NOT_FOUND);
+		} catch (InvalidRegistryException e) {
+			LOG.error(String.format("%s", e.getMessage()));
+			return new ResponseEntity<VendingMachineEntity>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -123,7 +128,7 @@ public class VendingMachineServiceImpl implements VendingMachineChangeService{
 		LOG.info(String.format("Making payment to the machine %s for the amount %f %s",name, amount, coins));
 		try {
 			System.out.println(coins);
-			CoinRegistry registry = CoinTypeFactory.createRegistry(useGroup);
+			CoinRegistry registry = CoinTypeFactory.createRegistry(useGroup, true);
 			registry.populate(coins);
 			System.out.println("User payment "+registry);
 			CoinRegistry change = monitor.makePayment(name, amount, registry);
@@ -138,6 +143,9 @@ public class VendingMachineServiceImpl implements VendingMachineChangeService{
 		} catch (InsufficientPaymentException e) {
 			LOG.error(String.format("Machine : {%s} %s",name, e.getMessage()));
 			return new ResponseEntity<CoinRegistryEntity>(HttpStatus.BAD_REQUEST);
+		} catch (InsufficientFundsException e) {
+			LOG.error(String.format("Machine : {%s} %s",name, e.getMessage()));
+			return new ResponseEntity<CoinRegistryEntity>(coins, HttpStatus.BAD_REQUEST);
 		}
 	}
 

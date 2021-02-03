@@ -8,7 +8,7 @@ import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 import {Dropdown, DropdownButton} from 'react-bootstrap';
 
-export interface SelectedMachineState {
+interface SelectedMachineState {
     selectedMachine:VendingMachine;    
 }
 
@@ -20,7 +20,6 @@ export class SelectMachineComponent extends React.Component<VendingMachineProps,
     }
 
     private setSelectedMachine(index:string | null, event:React.SyntheticEvent) {
-        console.log(Number(index));
         this.setState(
             {
                 selectedMachine:this.props.machineState.machines[Number(index)]
@@ -57,7 +56,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
     getMachines:actionCreators.machine.getMachines,
     selectMachine:actionCreators.machine.selectMachine,
     submitPayment:actionCreators.machine.submitPayment,
-    setMachineChanged: actionCreators.machine.setMachineChanged
+    setMachineChanged: actionCreators.machine.setMachineChanged,
+    updateMachineRegistry: actionCreators.machine.updateMachineRegistry,
+    resetChangeRegistry: actionCreators.machine.resetChangeRegistry,
+    emptyErrorMessages: actionCreators.machine.emptyErrorMessages
 },dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectMachineComponent);

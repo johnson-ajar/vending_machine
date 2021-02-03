@@ -3,8 +3,10 @@ package com.machine.vending.model.monitor;
 import java.util.List;
 
 import com.machine.vending.model.exception.DuplicateMachineException;
+import com.machine.vending.model.exception.InsufficientFundsException;
 import com.machine.vending.model.exception.InsufficientPaymentException;
 import com.machine.vending.model.exception.InvalidParameterException;
+import com.machine.vending.model.exception.InvalidRegistryException;
 import com.machine.vending.model.exception.MachineNotFoundException;
 import com.machine.vending.model.generic.AbstractCoinRegistry;
 import com.machine.vending.model.generic.AbstractVendingBank;
@@ -55,7 +57,7 @@ public interface MachineMonitorInterface<R extends AbstractCoinRegistry, B exten
 	 * @throws MachineNotFoundException If the provided machine name is not found.
 	 * @throws InvalidParameterException If the provided parameter name and registry is invalid or null.
 	 * */
-	public M updateMachineCoinRegistry(String name, R registry) throws InvalidParameterException, MachineNotFoundException;
+	public M updateRegistry(String name, String type, R registry) throws InvalidParameterException, MachineNotFoundException, InvalidRegistryException;
 	
 	
 	/**
@@ -97,7 +99,7 @@ public interface MachineMonitorInterface<R extends AbstractCoinRegistry, B exten
 	public void removeVendingMachine(String machine_name) throws MachineNotFoundException;
 	
 	
-	public R makePayment(String machine_name, Double amount, R payment) throws InvalidParameterException, MachineNotFoundException, InsufficientPaymentException;
+	public R makePayment(String machine_name, Double amount, R payment) throws InvalidParameterException, MachineNotFoundException, InsufficientPaymentException, InsufficientFundsException ;
 	
 	/**
 	 * Use this method to get the number of vending machine being monitored by this api.

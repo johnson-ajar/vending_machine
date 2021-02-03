@@ -9,12 +9,13 @@ import {VendingMachine} from '../../../model/vending_machine';
 import { MachineBank } from '../../../model/machine_bank';
 import {CoinRegistry} from '../../../model/coin_registry';
 import {getCoinByCountry, useCoinType} from '../../../model/coin_type';
+import UpdateRegistryComponent from '../machine/update_registry_component';
 
 export interface MachineMonitorProps extends VendingMachineProps{
     
 }
 
-//const coinStyle = 
+
 export class MachineMonitorComponent extends React.Component<MachineMonitorProps> {
     coins = getCoinByCountry(useCoinType);
     constructor(props:MachineMonitorProps){
@@ -27,12 +28,12 @@ export class MachineMonitorComponent extends React.Component<MachineMonitorProps
         let bank:MachineBank = Object.assign(new MachineBank(), machine.getBank());
         
         let registryCoins:{[name:string]:number} ={};
-        if(registryType === 'Machine'){
+        if(registryType === 'machine'){
             if(bank.getMachineRegistry() === undefined){
                 return (<></>);
             }
             registryCoins = Object.assign(new CoinRegistry(), bank.getMachineRegistry()).getCoins();
-        } else if (registryType == 'User'){
+        } else if (registryType == 'user'){
             if(bank.getUserRegistry() === undefined){
                 return (<></>);
             }
@@ -53,11 +54,12 @@ export class MachineMonitorComponent extends React.Component<MachineMonitorProps
         if(bank.getUserRegistry() === undefined) {
             return (<></>);
         }
+       
         let amount:number = 0.0;
-        if(registryType === 'Machine'){
+        if(registryType === 'machine'){
             let registry:CoinRegistry = Object.assign(new CoinRegistry(), bank.getMachineRegistry());
             amount = registry.getAmount(useCoinType);
-        } else if(registryType == 'User'){
+        } else if(registryType == 'user'){
             let registry:CoinRegistry = Object.assign(new CoinRegistry(), bank.getUserRegistry());
             amount = registry.getAmount(useCoinType);
         }
@@ -67,7 +69,7 @@ export class MachineMonitorComponent extends React.Component<MachineMonitorProps
     }
     
     private displayBankAmount(machine:VendingMachine) {
-        let bank:MachineBank = Object.assign(new MachineBank(), machine.getBank());
+        let bank:MachineBank = machine.getBank() as MachineBank;
         return(<tr>
             <td>Total Amount:</td>
             <td>{bank.getAmount(useCoinType).toLocaleString(undefined, {maximumFractionDigits:2})}</td>
@@ -85,14 +87,15 @@ export class MachineMonitorComponent extends React.Component<MachineMonitorProps
                         <th>User Coin Registry</th>
                     </tr>
                     <tr>
-                        {this.displayRegistry(this.props.machineState.selectedMachine, 'Machine')}
-                        {this.displayRegistry(this.props.machineState.selectedMachine, 'User')}
+                        {this.displayRegistry(this.props.machineState.selectedMachine, 'machine')}
+                        {this.displayRegistry(this.props.machineState.selectedMachine, 'user')}
                     </tr>
                     <tr>
-                        {this.displayRegistryAmount(this.props.machineState.selectedMachine, 'Machine')}
-                        {this.displayRegistryAmount(this.props.machineState.selectedMachine, 'User')}
+                        {this.displayRegistryAmount(this.props.machineState.selectedMachine, 'machine')}
+                        {this.displayRegistryAmount(this.props.machineState.selectedMachine, 'user')}
                     </tr>
                     {this.displayBankAmount(this.props.machineState.selectedMachine)}
+                    <UpdateRegistryComponent/>
                 </tbody>
             </Table>
             </div>);
@@ -107,7 +110,10 @@ const mapDispatchToProps = (dispatch:Dispatch)=>bindActionCreators({
     getMachines: actionCreators.machine.getMachines,
     selectMachine: actionCreators.machine.selectMachine,
     submitPayment: actionCreators.machine.submitPayment,
-    setMachineChanged: actionCreators.machine.setMachineChanged
+    setMachineChanged: actionCreators.machine.setMachineChanged,
+    updateMachineRegistry: actionCreators.machine.updateMachineRegistry,
+    resetChangeRegistry: actionCreators.machine.resetChangeRegistry,
+    emptyErrorMessages: actionCreators.machine.emptyErrorMessages
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(MachineMonitorComponent);
