@@ -27,7 +27,7 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
     constructor(props: UpdateRegistryProps) {
         super(props);
         this.setSelectRegistry = this.setSelectRegistry.bind(this);
-        this.updateRegistry = this.updateRegistry.bind(this);
+        this.updateCoinRegistry = this.updateCoinRegistry.bind(this);
         this.updateCoin = this.updateCoin.bind(this);
         this.addRangeSlider = this.addRangeSlider.bind(this);
         this.submitUpdatedRegistry = this.submitUpdatedRegistry.bind(this);
@@ -62,8 +62,8 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
                 <div className="input-group-prepend">
                     <label className="input-group-text" htmlFor="registrySelection"> Select Registry Before Updating: </label>
                 </div>
-                <select className="custom-select" defaultValue="1" id="registrySelection" onChange={(e)=>this.setSelectRegistry(e)}>
-                    <option value="" disabled hidden >Choose Registry</option>
+                <select className="custom-select" defaultValue="0" id="registrySelection" onChange={(e)=>this.setSelectRegistry(e)}>
+                    <option value="0" disabled >Choose Registry</option>
                     <option value="1">Machine</option>
                     <option value="2">User</option>
                 </select>
@@ -86,7 +86,7 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
        });
     }
 
-    private updateRegistry() {
+    private updateCoinRegistry() {
         let registryCoins = this.state.registryType == 'user'? this.props.userRegistry.getCoins(): this.props.machineRegistry.getCoins();
         return(<td> Update Registry 
             {Object.keys(registryCoins).map((k)=>{
@@ -95,6 +95,7 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
                 <InputGroup.Prepend key={k} className="mb-3">
                     <InputGroup.Text id="basic-addon1">{coins[useCoinType][k].display}</InputGroup.Text>
                     {this.addRangeSlider(coins[useCoinType][k], registryCoins[k])}
+                    <span style={{marginLeft:"30px"}}>£{(registryCoins[k]*coins[useCoinType][k].value/100.0).toFixed(2)}</span>
                 </InputGroup.Prepend>
                 </InputGroup>
            )
@@ -117,19 +118,23 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
          
     }
 
+    private updateRegistry() {
+        return(<div className="input-group mb-3">
+            <div className="input-group-prepend">
+                    <label style={{marginRight:"100px"}} className="input-group-text" htmlFor="updateRegistry">To Update Registry: </label>
+            </div>
+            <button style={{marginLeft:"100px"}}id="updateRegistry" className="btn btn-outline-secondary" type="button" onClick={(e)=>this.submitUpdatedRegistry(e)}> Click Here....</button>
+        </div>);
+    }
+
     public render(){
         return(<tr>
             <td>
                 {this.registrySelection()}
                 <span style={{marginLeft:"20px"}}>{this.state.registryType}</span>
-               {<div className="input-group mb-3">
-                   <div className="input-group-prepend">
-                       To Update Registry:
-                       <button className="btn btn-outline-secondary" type="button" onClick={(e)=>this.submitUpdatedRegistry(e)}> Click Here....</button>
-                   </div>
-            </div>}
+                {this.updateRegistry()}
             </td>
-            {this.updateRegistry()}
+            {this.updateCoinRegistry()}
         </tr>)
     };
 }

@@ -66,7 +66,6 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
        
     }
     private getMachines(){
-        console.log("Getting machine");
         this.props.getMachines();
        return null; 
     }
@@ -111,8 +110,8 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
             <tr>
                 <td>Amount Purchased</td>
                 <td>
-                    {purchaseValue.toLocaleString(undefined, {maximumFractionDigits:2})}
-                    <Button style={{marginLeft:"30px"}} onClick={e => this.calculatePurchaseAmount(e)}>Make Purchase</Button>
+                    <Button  onClick={e => this.calculatePurchaseAmount(e)}>Make Purchase</Button>
+                    <span style={{fontSize:"30px", marginLeft:"30px"}}>£{purchaseValue.toLocaleString(undefined, {maximumFractionDigits:2})}</span>
                 </td>
             </tr>
         );
@@ -138,7 +137,6 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
        if(hasBalance) {
            //If the payment is right call payment function of the service.
            //Make sure the machine state is reset.
-           console.log("Submitting payment...");
            this.props.submitPayment(this.props.machineState.selectedMachine.getName(), this.state.purchaseAmount, this.state.paymentRegistry);
            console.log(this.props.machineState.errors);
            this.setState({
@@ -210,15 +208,15 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
                     })}
                     </div>
                     <div>
-                    <span style={{marginTop:"40px"}}>Provided Payment Amount: <b>{this.paymentAmount()}</b>
+                    <span style={{marginTop:"40px"}}>Provided Payment Amount: <b>£{this.paymentAmount()}</b>
                         <div>
                             {<b style={{color:(this.hasBalance()?"green":"red"), marginRight:"70px" }}>
-                                Balance : {(this.hasBalance()?Math.abs(balance):balance).toLocaleString(undefined, {maximumFractionDigits:2})}
+                                Balance : £{(this.hasBalance()?Math.abs(balance):balance).toLocaleString(undefined, {maximumFractionDigits:2})}
                                 </b>}
                         </div>
                     </span>
                     <Button 
-                    style={{marginTop:"20px", marginLeft:"100px"}}
+                    style={{marginTop:"20px"}}
                     disabled={disablePaymentSubmit}
                      onClick={this.submitPayment}>
                          Submit Payment
@@ -238,7 +236,7 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
         let cCoins = getCoinByCountry(useCoinType);
         return(
             <tr>
-                <td>Collect Change <div>{this.state.purchaseAmount}</div></td>
+                <td>Collect Change : £{this.props.machineState.coinChange.getAmount(useCoinType)}</td>
                 
                 <td>
                 {Object.keys(changeCoins).map(key=>{
@@ -300,7 +298,7 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
                 <Table striped bordered hover className="text-left">
                     <tbody>
                     <tr>
-                        <th>Vending Machine</th>
+                        <th>Load Vending Machine : </th>
                         <th><button onClick = {()=>this.getMachines()}>Load Machines</button></th>
                     </tr>
                     {this.displayMachineSelectionMenu()}
