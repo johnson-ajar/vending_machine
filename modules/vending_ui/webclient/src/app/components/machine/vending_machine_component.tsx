@@ -73,10 +73,10 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
 
     private displaySelectedMachineName() {
         return(<tr>
-            <td>Selected Machine: </td>
-            <td>
-            {this.props !== null ? <h3>{this.props.machineState.selectedMachine.getName()}</h3>:""}
-            </td>
+                <td>Selected Machine: </td>
+                <td>
+                {this.props !== null ? <h3>{this.props.machineState.selectedMachine.getName()}</h3>:""}
+                </td>
            </tr>);
     }
 
@@ -297,7 +297,7 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
         return(
             <div>
                 {this.popErrors()}
-                <Table striped bordered hover>
+                <Table striped bordered hover className="text-left">
                     <tbody>
                     <tr>
                         <th>Vending Machine</th>
