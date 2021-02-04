@@ -6,7 +6,7 @@ import {actionCreators} from '../../../store/actions/action_index';
 import {bindActionCreators} from 'redux';
 import {CoinRegistry} from '../../../model/coin_registry';
 import {AppState, Dispatch} from '../../../store/store_index';
-import { DropdownButton, Dropdown, InputGroup} from 'react-bootstrap';
+import { /*DropdownButton, Dropdown,*/ InputGroup} from 'react-bootstrap';
 import {coins, Coin, useCoinType} from '../../../model/coin_type';
 import RangeSlider from 'react-bootstrap-range-slider';
 
@@ -51,22 +51,27 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
             registryType: (Number(index) == 2 ? 'user': 'machine')
         });
     }
-    private setSelectRegistry(index:string , event:React.SyntheticEvent){
-       this.setRegistryState(Number(index));
+    private setSelectRegistry(event:React.SyntheticEvent<HTMLSelectElement,Event>){
+        console.log(event.currentTarget.value);
+       this.setRegistryState(Number(event.currentTarget.value));
+    }
+    
+    private registrySelection() {
+        return(
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <label className="input-group-text" htmlFor="registrySelection"> Select Registry Before Updating: </label>
+                </div>
+                <select className="custom-select" defaultValue="1" id="registrySelection" onChange={(e)=>this.setSelectRegistry(e)}>
+                    <option value="" disabled hidden >Choose Registry</option>
+                    <option value="1">Machine</option>
+                    <option value="2">User</option>
+                </select>
+            </div>
+        );
     }
 
-    private registrySelection(){
-        return (
-        <div>
-        Select Registry Before updating :  <DropdownButton style={{marginLeft:"20px"}} id="dropdown-basic-button" title={"Choose Registry"} onSelect={this.setSelectRegistry}>
-            <Dropdown.Item key={1} eventKey="1" title="Machine">Machine</Dropdown.Item>
-            <Dropdown.Item key={2} eventKey="2" title="User"> User</Dropdown.Item>
-        </DropdownButton>
-        </div>);
-    };
-
     private addRangeSlider(coin:Coin, coinValue:number) {
-       
         return(<RangeSlider  min={coin.min} max={coin.max} size="sm" tooltip='auto' value={coinValue}
         onChange={(e:any)=> this.updateCoin(e, coin)}></RangeSlider>);
     }

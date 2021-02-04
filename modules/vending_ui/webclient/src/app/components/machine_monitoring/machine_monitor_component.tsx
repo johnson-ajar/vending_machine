@@ -80,7 +80,7 @@ export class MachineMonitorComponent extends React.Component<MachineMonitorProps
     public render() {
         return(<div>
             <h1>Machine Monitoring</h1>
-            <Table striped bordered hover>
+            <Table striped bordered hover className="text-left">
                 <tbody>
                     <tr>
                         <th>Machine Coin Registry</th>
