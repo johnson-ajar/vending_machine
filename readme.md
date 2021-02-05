@@ -1,5 +1,5 @@
 ## Vending Machine Monitoring Application
-
+Note:: If the coin slider are not responsive in the UI please select or unselect and reselect the registry type for the slider to work. I am looking into fixing it.
 ## Application Modules.
 This application contain the following modules under the root folder vending_machine.
 >	- vending_model
