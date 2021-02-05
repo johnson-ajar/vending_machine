@@ -162,10 +162,10 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
     private hasBalance():boolean {
         let balance:number = this.calculateBalance();
         //Check for zero balance
-        //if(balance < 0.099 && parseFloat(Math.abs(balance).toPrecision(2))<=0.01) {
-        if(parseFloat(Math.abs(balance).toFixed(2))===0.00){
+        if(parseFloat(Math.abs(balance).toFixed(2))==0.00){
             return true;
-        } else if(balance >0.00){
+        }
+        if(balance >0.00){
             return true;
         }
         return false;
@@ -187,7 +187,7 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
         let coins = getCoinByCountry(country);
         let disableIncrementPayment:boolean = this.state !== null && this.state.purchaseAmount > 0.0  ? false : true;
         let balance:number = this.calculateBalance();
-        let disablePaymentSubmit:boolean = balance<0 ? true: false;
+        let disablePaymentSubmit:boolean = !this.hasBalance();//balance < 0 ? true: false;
        
         return(
             <tr>
