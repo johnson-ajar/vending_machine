@@ -149,12 +149,9 @@ public class VendingMachineChangeServiceImpl implements VendingMachineChangeServ
 			@RequestBody(required=true) CoinRegistryEntity coins) {
 		LOG.info(String.format("Making payment to the machine %s for the amount %f %s",name, amount, coins));
 		try {
-			System.out.println(coins);
 			CoinRegistry registry = CoinTypeFactory.createRegistry(useGroup, true);
 			registry.populate(coins);
-			System.out.println("User payment "+registry);
 			CoinRegistry change = monitor.makePayment(name, amount, registry);
-			System.out.println("User Change "+change);
 			return new ResponseEntity<CoinRegistryEntity>(change.entity(), HttpStatus.OK);
 		} catch(MachineNotFoundException e) {
 			LOG.error(String.format("%s", e.getMessage()));
@@ -164,7 +161,7 @@ public class VendingMachineChangeServiceImpl implements VendingMachineChangeServ
 			return new ResponseEntity<CoinRegistryEntity>(HttpStatus.BAD_REQUEST);
 		} catch (InsufficientPaymentException e) {
 			LOG.error(String.format("Machine : {%s} %s",name, e.getMessage()));
-			return new ResponseEntity<CoinRegistryEntity>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<CoinRegistryEntity>(coins, HttpStatus.BAD_REQUEST);
 		} catch (InsufficientFundsException e) {
 			LOG.error(String.format("Machine : {%s} %s",name, e.getMessage()));
 			return new ResponseEntity<CoinRegistryEntity>(coins, HttpStatus.BAD_REQUEST);

@@ -105,10 +105,6 @@ public abstract class AbstractVendingBank<R extends AbstractCoinRegistry> implem
 		} else if(change < 0) {
 			throw new InsufficientPaymentException(purchaseAmount, registry);
 		}
-		
-		System.out.println("The user payment in pences "+registry.totalPences());
-		System.out.println("Converted payment in pences "+convertToPences(purchaseAmount));
-		System.out.println("The user should be provided change "+change);
 		//Calculate change if no change is required update the user coin registry.
 		if (change >= 0) {
 			 R changeRegistry = calculateChange(Math.abs(change), registry);

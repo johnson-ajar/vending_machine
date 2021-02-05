@@ -37,7 +37,6 @@ public abstract class AbstractCoinRegistry implements EntityToModelAdapter<Abstr
 
 	@Override
 	public AbstractCoinRegistry populate(CoinRegistryEntity entity) {
-		System.out.println("Setting payment entity "+entity);
 		this.amount = entity.getAmount();
 		this.coinStore = entity.getCoinRegistry();
 		return this;
