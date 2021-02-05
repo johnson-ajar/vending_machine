@@ -1,4 +1,4 @@
-package com.machine.vending.model.generic;
+package com.machine.vending.model;
 
 import java.util.HashMap;
 import java.util.List;

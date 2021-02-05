@@ -1,11 +1,11 @@
-package com.machine.vending.model;
+package com.machine.vending.model.api;
 
 import java.util.Arrays;
 import java.util.List;
 
+import com.machine.vending.model.AbstractCoinRegistry;
 import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.common.CoinType;
-import com.machine.vending.model.generic.AbstractCoinRegistry;
 
 public class CoinRegistry extends AbstractCoinRegistry{
 	private final CoinGroup group;

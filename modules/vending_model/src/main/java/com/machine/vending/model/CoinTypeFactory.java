@@ -1,7 +1,7 @@
-package com.machine.vending.model.generic;
+package com.machine.vending.model;
 
-import com.machine.vending.model.CoinRegistry;
-import com.machine.vending.model.VendingBank;
+import com.machine.vending.model.api.CoinRegistry;
+import com.machine.vending.model.api.VendingBank;
 import com.machine.vending.model.common.CoinGroup;
 
 public class CoinTypeFactory {

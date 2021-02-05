@@ -19,11 +19,9 @@ let initialState:VendingMachineState = {
    errors:[]
 }
 export function reducers (state:VendingMachineState = initialState, action:Actions.Action){
-    console.log(action);
     let partialState:Partial<VendingMachineState> | undefined;
     switch(action.type){
         case GET_MACHINES_FULFILLED:
-            console.log(action.payload);
             partialState = {
                 ...state,
                 machines:action.payload.machineState.machines,
@@ -46,7 +44,6 @@ export function reducers (state:VendingMachineState = initialState, action:Actio
             }
         break;
         case SELECT_MACHINE_FULFILLED:
-            console.log(action.payload);
             partialState = {
                 ...state,
                 isMachineChanged: !state.isMachineChanged,
@@ -54,7 +51,6 @@ export function reducers (state:VendingMachineState = initialState, action:Actio
             }
         break;
         case UPDATE_MACHINE_REGISTRY_FULFILLED:
-            console.log(action.payload)
             partialState = {
                 ...state,
                 selectedMachine:action.payload.updatedMachine as VendingMachine

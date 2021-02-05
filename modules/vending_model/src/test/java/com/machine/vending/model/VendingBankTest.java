@@ -12,12 +12,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.machine.vending.model.CoinRegistry;
-import com.machine.vending.model.VendingBank;
+import com.machine.vending.model.api.CoinRegistry;
+import com.machine.vending.model.api.VendingBank;
 import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.common.CoinType;
 import com.machine.vending.model.exception.InsufficientPaymentException;
-import com.machine.vending.model.generic.CoinTypeFactory;
 
 public class VendingBankTest {
 	private VendingBank bank;

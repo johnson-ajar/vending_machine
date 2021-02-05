@@ -24,7 +24,6 @@ export class MachineService {
             let machine:VendingMachine = this.createVendingMachine(d);
             machines.push(machine);
         });
-        console.log(machines);
         return machines;
     }
 
@@ -44,9 +43,7 @@ export class MachineService {
         } else if(response.status == 400){
             throw Error("The parameter passed is invalid or payment amount is insufficient or not enough funds in machine registry.");
         }
-        console.log(response);
         const changeObject = await response.json();
-        console.log(changeObject);
         const changePayment = Object.assign(new CoinRegistry(), changeObject);
         return changePayment;
     }

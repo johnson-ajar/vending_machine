@@ -1,8 +1,8 @@
 package com.machine.vending.model.monitor;
 
-import com.machine.vending.model.CoinRegistry;
-import com.machine.vending.model.VendingBank;
-import com.machine.vending.model.VendingMachine;
+import com.machine.vending.model.api.CoinRegistry;
+import com.machine.vending.model.api.VendingBank;
+import com.machine.vending.model.api.VendingMachine;
 import com.machine.vending.model.common.CoinGroup;
 
 public class VendingMachineMonitor extends AbstractMachineMonitor<CoinRegistry, VendingBank, VendingMachine>{

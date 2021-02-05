@@ -1,4 +1,4 @@
-package com.machine.vending.app;
+package com.machine.vending.api;
 
 import javax.annotation.PostConstruct;
 
@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.machine.vending.model.CoinRegistry;
+import com.machine.vending.model.api.CoinRegistry;
 import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.exception.DuplicateMachineException;
 import com.machine.vending.model.exception.InvalidParameterException;

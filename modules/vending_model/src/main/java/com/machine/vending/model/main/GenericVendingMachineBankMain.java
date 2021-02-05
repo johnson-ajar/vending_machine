@@ -1,7 +1,7 @@
 package com.machine.vending.model.main;
 
-import com.machine.vending.model.CoinRegistry;
-import com.machine.vending.model.VendingBank;
+import com.machine.vending.model.api.CoinRegistry;
+import com.machine.vending.model.api.VendingBank;
 import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.common.CoinType;
 import com.machine.vending.model.exception.InsufficientFundsException;

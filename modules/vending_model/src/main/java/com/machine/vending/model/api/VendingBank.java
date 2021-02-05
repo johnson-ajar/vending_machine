@@ -1,8 +1,8 @@
-package com.machine.vending.model;
+package com.machine.vending.model.api;
 
+import com.machine.vending.model.AbstractVendingBank;
+import com.machine.vending.model.CoinTypeFactory;
 import com.machine.vending.model.common.CoinGroup;
-import com.machine.vending.model.generic.AbstractVendingBank;
-import com.machine.vending.model.generic.CoinTypeFactory;
 /**
  * The Vending Bank machine registry is always default with 100£ worth of
  * coins at different denomination. This can be reset

@@ -1,6 +1,6 @@
 package com.machine.vending.model.exception;
 
-import com.machine.vending.model.generic.AbstractCoinRegistry;
+import com.machine.vending.model.AbstractCoinRegistry;
 
 public class InsufficientFundsException extends Exception {
 	private static final long serialVersionUID = 1L;

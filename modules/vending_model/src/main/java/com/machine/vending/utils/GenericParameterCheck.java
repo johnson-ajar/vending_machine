@@ -1,8 +1,8 @@
 package com.machine.vending.utils;
 
+import com.machine.vending.model.AbstractCoinRegistry;
+import com.machine.vending.model.AbstractVendingMachine;
 import com.machine.vending.model.exception.InvalidParameterException;
-import com.machine.vending.model.generic.AbstractCoinRegistry;
-import com.machine.vending.model.generic.AbstractVendingMachine;
 
 public class GenericParameterCheck {
 	public static void check(String parameter, String value) throws InvalidParameterException {

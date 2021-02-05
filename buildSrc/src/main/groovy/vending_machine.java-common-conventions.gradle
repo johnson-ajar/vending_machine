@@ -34,13 +34,19 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springboot_VERSION"
     
+    //testImplementation('io.projectreactor:reactor-test')
+    //implementation("org.springframework.boot:spring-boot-starter-webflux:$springboot_VERSION") {
+	 //  exclude group: 'org.springframework.boot', module: 'spring-boot-starter-reactor-netty'
+	//}
     implementation("org.springframework.boot:spring-boot-starter-log4j2:$springboot_VERSION")
+    implementation("org.springframework.boot:spring-boot-starter:$springboot_VERSION")
     implementation("org.springframework.boot:spring-boot-starter-web:$springboot_VERSION")
 	implementation("org.springframework.boot:spring-boot-starter-tomcat:$springboot_VERSION")  
 	
 	//Api documentation swagger openapi dependencies.
 	implementation("org.springdoc:springdoc-openapi-ui:$openapi_VERSION")
-    
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.9.8')
+     
 }
 
 tasks.named('test') {

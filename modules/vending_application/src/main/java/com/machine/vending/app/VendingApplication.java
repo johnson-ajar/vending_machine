@@ -11,12 +11,13 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-@ComponentScan(basePackages="com.machine.vending")
+@ComponentScan(basePackages= {"com.machine","com.machine.vending", "com.machine.vending.model", "com.machine.vending.api"})
 public class VendingApplication {
 	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
+			
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
@@ -28,7 +29,20 @@ public class VendingApplication {
 						"Access-Control-Request-Headers",
 						"Access-Control-Allow-Origin");
 			}
+			
+			/*
+			@Override
+			public void configureMessageConverters(List<HttpMessageConverter<?>> converters ) {
+				MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+				VendingMachineEntityModule machineModule = new VendingMachineEntityModule();
+				final ObjectMapper mapper = new ObjectMapper();
+				mapper.registerModule(machineModule);
+				converter.setObjectMapper(mapper);
+				converters.add(converter);
+			}*/
 		};
+		
+		
 	}
 	
     public static void main(String[] args) {

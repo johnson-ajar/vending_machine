@@ -138,7 +138,6 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
            //If the payment is right call payment function of the service.
            //Make sure the machine state is reset.
            this.props.submitPayment(this.props.machineState.selectedMachine.getName(), this.state.purchaseAmount, this.state.paymentRegistry);
-           console.log(this.props.machineState.errors);
            this.setState({
                ...this.state,
                purchaseAmount:0.0,
@@ -232,7 +231,6 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
     private collectChange() {
         
         let changeCoins = this.props.machineState.coinChange.getCoins();
-        console.log(this.props.machineState.coinChange);
         let cCoins = getCoinByCountry(useCoinType);
         return(
             <tr>
@@ -252,10 +250,6 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
 
     private displaySelectedMachine() {
         let isMachineSelected = this.state !== null && this.props.machineState.selectedMachine.getName() !== "" ? true: false;
-        console.log(isMachineSelected);
-        if(this.state !== null){
-            console.log(this.state);
-        }
         if(isMachineSelected){
             return(
                 <>
@@ -290,8 +284,6 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
     }
 
     public render() {
-        console.log(this.props.machineState.errors);
-      
         return(
             <div>
                 {this.popErrors()}
