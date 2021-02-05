@@ -2,15 +2,15 @@ package com.machine.vending.model.monitor;
 
 import java.util.List;
 
+import com.machine.vending.model.AbstractCoinRegistry;
+import com.machine.vending.model.AbstractVendingBank;
+import com.machine.vending.model.AbstractVendingMachine;
 import com.machine.vending.model.exception.DuplicateMachineException;
 import com.machine.vending.model.exception.InsufficientFundsException;
 import com.machine.vending.model.exception.InsufficientPaymentException;
 import com.machine.vending.model.exception.InvalidParameterException;
 import com.machine.vending.model.exception.InvalidRegistryException;
 import com.machine.vending.model.exception.MachineNotFoundException;
-import com.machine.vending.model.generic.AbstractCoinRegistry;
-import com.machine.vending.model.generic.AbstractVendingBank;
-import com.machine.vending.model.generic.AbstractVendingMachine;
 
 public interface MachineMonitorInterface<R extends AbstractCoinRegistry, B extends AbstractVendingBank<R>, M extends AbstractVendingMachine<R,B>> {
 	

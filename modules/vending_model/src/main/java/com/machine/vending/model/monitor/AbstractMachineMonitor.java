@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.machine.vending.model.AbstractCoinRegistry;
+import com.machine.vending.model.AbstractVendingBank;
+import com.machine.vending.model.AbstractVendingMachine;
 import com.machine.vending.model.common.RegistryType;
 import com.machine.vending.model.exception.DuplicateMachineException;
 import com.machine.vending.model.exception.InsufficientFundsException;
@@ -12,9 +15,6 @@ import com.machine.vending.model.exception.InsufficientPaymentException;
 import com.machine.vending.model.exception.InvalidParameterException;
 import com.machine.vending.model.exception.InvalidRegistryException;
 import com.machine.vending.model.exception.MachineNotFoundException;
-import com.machine.vending.model.generic.AbstractCoinRegistry;
-import com.machine.vending.model.generic.AbstractVendingBank;
-import com.machine.vending.model.generic.AbstractVendingMachine;
 import com.machine.vending.utils.GenericParameterCheck;
 
 public abstract class AbstractMachineMonitor<R extends AbstractCoinRegistry, B extends AbstractVendingBank<R>, M extends AbstractVendingMachine<R,B>> implements MachineMonitorInterface<R,B,M> {

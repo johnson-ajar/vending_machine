@@ -52,7 +52,6 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
         });
     }
     private setSelectRegistry(event:React.SyntheticEvent<HTMLSelectElement,Event>){
-        console.log(event.currentTarget.value);
        this.setRegistryState(Number(event.currentTarget.value));
     }
     
@@ -103,7 +102,6 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
     }
 
     private submitUpdatedRegistry(e:React.MouseEvent<HTMLElement, MouseEvent>) {
-        console.log(this.state.selectedRegistry);
         let registry:CoinRegistry = this.state.registryType == 'machine'? this.props.machineRegistry : this.props.userRegistry;
        
         this.props.updateMachineRegistry(

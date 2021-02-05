@@ -1,4 +1,4 @@
-package com.machine.vending.model.generic;
+package com.machine.vending.model;
 
 import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.common.CoinType;

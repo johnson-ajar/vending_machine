@@ -1,7 +1,7 @@
-package com.machine.vending.model;
+package com.machine.vending.model.api;
 
+import com.machine.vending.model.AbstractVendingMachine;
 import com.machine.vending.model.common.CoinGroup;
-import com.machine.vending.model.generic.AbstractVendingMachine;
 
 public class VendingMachine extends AbstractVendingMachine<CoinRegistry, VendingBank>{
 	

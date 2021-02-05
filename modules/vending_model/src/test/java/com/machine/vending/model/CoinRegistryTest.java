@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import com.machine.vending.model.CoinRegistry;
+import com.machine.vending.model.api.CoinRegistry;
 import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.common.CoinType;
 import com.machine.vending.model.entity.CoinRegistryEntity;

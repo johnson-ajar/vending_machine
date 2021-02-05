@@ -3,10 +3,11 @@ package com.machine.vending.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.machine.vending.model.api.CoinRegistry;
+import com.machine.vending.model.api.VendingMachine;
 import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.common.CoinType;
 import com.machine.vending.model.exception.InsufficientFundsException;
-import com.machine.vending.model.generic.CoinTypeFactory;
 
 public class VendingMachineTest {
 	private VendingMachine machine = new VendingMachine("machine1", CoinGroup.UK);
