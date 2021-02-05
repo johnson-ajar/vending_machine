@@ -29,6 +29,13 @@ public final class CoinRegistryEntity {
 		this.amount = amount;
 	}
 	
+	public Double calculateAmount() {
+		Double value =0.0;
+		for(CoinType type: coinStore.keySet()) {
+			value+=coinStore.get(type)*type.getValue();
+		}
+		return value/100.0;
+	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

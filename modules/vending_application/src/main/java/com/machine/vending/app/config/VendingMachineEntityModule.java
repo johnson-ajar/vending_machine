@@ -50,7 +50,6 @@ final class VendingBankEntityDeserializer extends JsonDeserializer<VendingBankEn
 	@Override
 	public VendingBankEntity deserialize(JsonParser p, DeserializationContext ctxt)
 			throws IOException, JsonProcessingException {
-		System.out.println("Deserializing Vending bank object");
 		ObjectCodec objCodec = p.getCodec();
 		JsonNode jNode = objCodec.readTree(p);
 		VendingBankEntity entity = new VendingBankEntity();
@@ -63,10 +62,8 @@ final class VendingMachineEntityDeserializer extends JsonDeserializer<VendingMac
 
 	@Override
 	public VendingMachineEntity deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		System.out.println("Deserializing Vending machine object");
 		JsonNode jNode = p.readValueAsTree();
 		VendingMachineEntity entity = new VendingMachineEntity();
-		System.out.println(jNode.toString());
 		entity.setName(jNode.get("name").asText());
 		JsonParser bankParser = jNode.get("bank").traverse();
 		bankParser.setCodec(p.getCodec());

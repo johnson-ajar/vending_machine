@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.machine.vending.app.config.VendingMachineEntityModule;
+import com.machine.vending.model.CoinTypeFactory;
+import com.machine.vending.model.api.CoinRegistry;
+import com.machine.vending.model.common.CoinGroup;
 import com.machine.vending.model.common.CoinType;
 import com.machine.vending.model.entity.CoinRegistryEntity;
 import com.machine.vending.model.entity.VendingMachineEntity;
@@ -114,19 +116,73 @@ public class VendingApplicationTest {
 		
 	}
 	
-	@Disabled
+	@Test
 	public void testUpdateRegistry() {
-		String url = "/vending/machine/machine1/registry?type=machine";
+		String updateUrl = "/vending/machine/machine1/registry?type=machine";
 		CoinRegistryEntity registry = new CoinRegistryEntity();
 		Map<CoinType, Integer> coins = new HashMap<CoinType, Integer>();
 		coins.put(CoinType.ONE_POUND, 10);
 		registry.setCoinRegistry(coins);
-		testRestTemplate.put(url, registry);
-		url = "/vending/machine/machine1/coins";
-		ResponseEntity r = testRestTemplate.exchange(url, HttpMethod.GET, headerEntity, CoinRegistryEntity.class);
-		
+		testRestTemplate.put(updateUrl, registry);
+		String getUrl = "/vending/machine/machine1/coins";
+		ResponseEntity<CoinRegistryEntity> r = testRestTemplate.exchange(getUrl, HttpMethod.GET, headerEntity, CoinRegistryEntity.class);
+		assertEquals(r.getBody().getCoinRegistry().get(CoinType.ONE_POUND), 10);
+		assertNull(r.getBody().getCoinRegistry().get(CoinType.ONE_PENCE));
+		//Reset coin registry.
+		CoinRegistry registryObj = CoinTypeFactory.createRegistry(CoinGroup.UK, false);
+		testRestTemplate.put(updateUrl, registryObj.entity());
 	}
 	
+	@Test
+	public void testUpdateUserRegistry() {
+		String updateUrl = "/vending/machine/machine1/registry?type=user";
+		CoinRegistryEntity registry = new CoinRegistryEntity();
+		Map<CoinType, Integer> coins = new HashMap<CoinType, Integer>();
+		coins.put(CoinType.ONE_POUND, 10);
+		registry.setCoinRegistry(coins);
+		testRestTemplate.put(updateUrl, registry);
+		String getUrl = "/vending/machine/machine1/user/coins";
+		ResponseEntity<CoinRegistryEntity> r = testRestTemplate.exchange(getUrl, HttpMethod.GET, headerEntity, CoinRegistryEntity.class);
+		assertEquals(r.getBody().getCoinRegistry().get(CoinType.ONE_POUND),10);
+		assertNull(r.getBody().getCoinRegistry().get(CoinType.ONE_PENCE));
+		//Reset coin registry.
+		CoinRegistry registryObj = CoinTypeFactory.createRegistry(CoinGroup.UK, true);
+		testRestTemplate.put(updateUrl, registryObj.entity());
+	}
+	
+	@Test
+	public void testSubmitPayment() {
+		String paymentUrl = "/vending/machine/machine1/payment?amount=1.88";
+		CoinRegistryEntity payRegistry = new CoinRegistryEntity();
+		Map<CoinType, Integer> coins = new HashMap<CoinType, Integer>();
+		coins.put(CoinType.ONE_POUND, 1);
+		coins.put(CoinType.FIFTY_PENCE, 1);
+		coins.put(CoinType.TWENTY_PENCE, 1);
+		coins.put(CoinType.TEN_PENCE, 1);
+		coins.put(CoinType.FIVE_PENCE, 1);
+		coins.put(CoinType.TWO_PENCE, 1);
+		coins.put(CoinType.ONE_PENCE, 2);
+		payRegistry.setCoinRegistry(coins);
+		HttpEntity<CoinRegistryEntity> payEntity = new HttpEntity<>(payRegistry);
+		ResponseEntity<CoinRegistryEntity> r = testRestTemplate.exchange(paymentUrl, HttpMethod.PUT, payEntity, CoinRegistryEntity.class);
+		
+		CoinRegistryEntity changeEntity = r.getBody();
+		assertEquals(changeEntity.getCoinRegistry().get(CoinType.ONE_PENCE),1);
+		
+		coins.put(CoinType.ONE_PENCE,1);
+		payRegistry.setCoinRegistry(coins);
+		payEntity = new HttpEntity<>(payRegistry);
+		r = testRestTemplate.exchange(paymentUrl, HttpMethod.PUT, payEntity, CoinRegistryEntity.class);
+		changeEntity = r.getBody();
+		assertEquals(changeEntity.getCoinRegistry().get(CoinType.ONE_PENCE),0);
+		
+		coins.put(CoinType.ONE_PENCE,0);
+		payRegistry.setCoinRegistry(coins);
+		payEntity = new HttpEntity<>(payRegistry);
+		r = testRestTemplate.exchange(paymentUrl, HttpMethod.PUT, payEntity, CoinRegistryEntity.class);
+		assertTrue(r.getBody().calculateAmount() == 1.87);
+		
+	}
 	/*
 	 * The custom json serializer and deserializer needs extensive testing, will be 
 	 * handled later.
