@@ -13,6 +13,7 @@ import RangeSlider from 'react-bootstrap-range-slider';
 interface UpdateRegistryState{
    selectedRegistry:CoinRegistry;
    registryType:string;
+   isRegistryChanged: boolean;
 }
 
 interface UpdateRegistryProps {
@@ -28,20 +29,16 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
         super(props);
         this.setSelectRegistry = this.setSelectRegistry.bind(this);
         this.updateCoinRegistry = this.updateCoinRegistry.bind(this);
-        this.updateCoin = this.updateCoin.bind(this);
         this.addRangeSlider = this.addRangeSlider.bind(this);
+        this.updateCoin = this.updateCoin.bind(this);
         this.submitUpdatedRegistry = this.submitUpdatedRegistry.bind(this);
         this.state = {
             registryType: 'machine',
-            selectedRegistry: this.props.machineRegistry
+            selectedRegistry: this.props.machineRegistry,
+            isRegistryChanged: false
         }
     }
-   public componentDidMount() {
-       this.setState({
-           registryType: 'machine',
-           selectedRegistry: this.props.machineRegistry
-       })
-   }
+  
     private setRegistryState(index:number) {
         this.setState({
             ...this.state,
@@ -61,15 +58,14 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
                 <div className="input-group-prepend">
                     <label className="input-group-text" htmlFor="registrySelection"> Select Registry Before Updating: </label>
                 </div>
-                <select className="custom-select" defaultValue="0" id="registrySelection" onChange={(e)=>this.setSelectRegistry(e)}>
-                    <option value="0" disabled >Choose Registry</option>
+                <select className="custom-select" defaultValue="1" id="registrySelection" onChange={(e)=>this.setSelectRegistry(e)}>
                     <option value="1">Machine</option>
                     <option value="2">User</option>
                 </select>
             </div>
         );
     }
-
+   // <!-- <option value="0" disabled >Choose Registry</option> -->
     private addRangeSlider(coin:Coin, coinValue:number) {
         return(<RangeSlider  min={coin.min} max={coin.max} size="sm" tooltip='auto' value={coinValue}
         onChange={(e:any)=> this.updateCoin(e, coin)}></RangeSlider>);
@@ -77,16 +73,27 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
 
     private updateCoin(e:any, coin:Coin) {
         let coinCount = e.target.value;
-        let registry:CoinRegistry = this.state.selectedRegistry;
+        //If registry is not changed use the registry from properties
+        //If the registry is changed used it from state.
+        let registry:CoinRegistry = !this.state.isRegistryChanged ? (this.state.registryType === 'user'? this.props.userRegistry:this.props.machineRegistry): this.state.selectedRegistry;
         registry.setCoin(coin.name, coinCount);
        this.setState({
            ...this.state,
-           selectedRegistry: registry
+           selectedRegistry: registry,
+           isRegistryChanged: true
        });
     }
 
     private updateCoinRegistry() {
-        let registryCoins = this.state.registryType == 'user'? this.props.userRegistry.getCoins(): this.props.machineRegistry.getCoins();
+        //If registry is not changed use the this.props.
+        //If registry is changed use the state.
+        let registryCoins ={};
+        if(!this.state.isRegistryChanged){
+            let registry:CoinRegistry = this.state.registryType == 'user'? this.props.userRegistry: this.props.machineRegistry;
+            registryCoins = registry.getCoins();
+        } else {
+            registryCoins =  this.state.selectedRegistry.getCoins();
+        }
         return(<td> Update Registry 
             {Object.keys(registryCoins).map((k)=>{
             return(
@@ -103,7 +110,9 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
 
     private submitUpdatedRegistry(e:React.MouseEvent<HTMLElement, MouseEvent>) {
         let registry:CoinRegistry = this.state.registryType == 'machine'? this.props.machineRegistry : this.props.userRegistry;
-       
+        if(this.state.isRegistryChanged) {
+            registry = this.state.selectedRegistry;
+        }
         this.props.updateMachineRegistry(
             this.props.machineName,
             this.state.registryType,
@@ -111,7 +120,8 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
         );
         this.setState({
             ...this.state,
-            selectedRegistry: registry
+            selectedRegistry: registry,
+            isRegistryChanged: false
         });
          
     }
