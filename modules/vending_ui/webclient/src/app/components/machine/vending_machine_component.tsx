@@ -146,6 +146,7 @@ export class VendingMachineComponent extends React.Component<VendingMachineProps
                hasBalance:false,
                errors: []
            });
+           this.props.setMachineChanged(!this.props.machineState.isMachineChanged);
        } 
     }  
 
