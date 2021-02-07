@@ -81,7 +81,7 @@ export const actionCreators = {
     }),
     setMachineChanged:(changed:boolean) =>({
         type: HAS_MACHINE_CHANGED,
-        payload: {hasRegistryChanged:changed}
+        payload: {hasMachineChanged:changed}
     }),
 
     updateMachineRegistry:(machine_name:string, registry_type:string, registry:CoinRegistry)=>({

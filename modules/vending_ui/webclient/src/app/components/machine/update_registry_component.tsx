@@ -6,7 +6,7 @@ import {actionCreators} from '../../../store/actions/action_index';
 import {bindActionCreators} from 'redux';
 import {CoinRegistry} from '../../../model/coin_registry';
 import {AppState, Dispatch} from '../../../store/store_index';
-import { /*DropdownButton, Dropdown,*/ InputGroup} from 'react-bootstrap';
+import { InputGroup} from 'react-bootstrap';
 import {coins, Coin, useCoinType} from '../../../model/coin_type';
 import RangeSlider from 'react-bootstrap-range-slider';
 
@@ -17,10 +17,9 @@ interface UpdateRegistryState{
 }
 
 interface UpdateRegistryProps {
-    machineName:string,
+    machineName:string;
     userRegistry:CoinRegistry;
     machineRegistry:CoinRegistry;
-    isMachineChanged: boolean;
     updateMachineRegistry:(macine_name:string, registry_type:string, registry:CoinRegistry)=>any;
 }
 
@@ -33,14 +32,14 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
         this.addRangeSlider = this.addRangeSlider.bind(this);
         this.updateCoin = this.updateCoin.bind(this);
         this.submitUpdatedRegistry = this.submitUpdatedRegistry.bind(this);
-        //this.resetRegistry= this.resetRegistry.bind(this);
+        this.resetRegistry= this.resetRegistry.bind(this);
         this.state = {
             registryType: 'machine',
-            selectedRegistry: this.props.machineRegistry,
+            selectedRegistry: new CoinRegistry(),
             isRegistryChanged: false
         }
     }
-  
+    
     private setRegistryState(index:number) {
         this.setState({
             ...this.state,
@@ -67,7 +66,6 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
             </div>
         );
     }
-   // <!-- <option value="0" disabled >Choose Registry</option> -->
     private addRangeSlider(coin:Coin, coinValue:number) {
         return(<RangeSlider  min={coin.min} max={coin.max} size="sm" tooltip='auto' value={coinValue}
         onChange={(e:any)=> this.updateCoin(e, coin)}></RangeSlider>);
@@ -77,7 +75,6 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
         let coinCount = e.target.value;
         //If registry is not changed use the registry from properties
         //If the registry is changed used it from state.
-       // let registry:CoinRegistry = !this.state.isRegistryChanged ? (this.state.registryType === 'user'? this.props.userRegistry:this.props.machineRegistry): this.state.selectedRegistry;
        let registry:CoinRegistry = this.getCoinRegistryToUpdate(); 
        registry.setCoin(coin.name, coinCount);
        this.setState({
@@ -85,13 +82,19 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
            selectedRegistry: registry,
            isRegistryChanged: true
        });
+       
     }
 
     private getCoinRegistryToUpdate() {
         let registry:CoinRegistry = !this.state.isRegistryChanged ? 
             (this.state.registryType === 'user'? this.props.userRegistry:this.props.machineRegistry)
             : this.state.selectedRegistry;
-        return registry;
+          
+        let nRegistry:CoinRegistry = new CoinRegistry();
+        Object.keys(registry.getCoins()).forEach((k)=>{
+            nRegistry.setCoin(k, registry.getNoCoin(k));
+        });
+        return nRegistry;
     }
 
     private updateCoinRegistry() {
@@ -99,7 +102,7 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
         //If registry is changed use the state.
         let registryCoins = this.getCoinRegistryToUpdate().getCoins();
         return(<td>
-            {/*this.refreshRegistry()*/}
+            {this.refreshRegistry()}
             Update Registry 
             <InputGroup></InputGroup>
             {Object.keys(registryCoins).map((k)=>{
@@ -131,12 +134,16 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
          
     }
 
-    /*
+
     private resetRegistry(e:any) { 
        let registry:CoinRegistry =  this.state.registryType == 'user'? this.props.userRegistry : this.props.machineRegistry;
+       let nRegistry:CoinRegistry = new CoinRegistry();
+        Object.keys(registry.getCoins()).forEach((k)=>{
+            nRegistry.setCoin(k, registry.getNoCoin(k));
+        });
        this.setState({
            ...this.state,
-           selectedRegistry:  registry,
+           selectedRegistry:  nRegistry,
            isRegistryChanged: false
        });
     }
@@ -149,7 +156,7 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
             <button style={{marginLeft:"100px"}}id="updateRegistry" className="btn btn-outline-secondary" type="button" onClick={(e)=>this.resetRegistry(e)}> Click Here....</button>
         </div>);
     }
-    */
+    
 
     private updateRegistry() {
         return(<div className="input-group mb-3">
@@ -173,6 +180,7 @@ export class UpdateRegistryComponent extends React.Component<UpdateRegistryProps
 }
 
 const mapStateToProps = (state:AppState)=>({
+   machine: state.machineState.selectedMachine,
    machineName: state.machineState.selectedMachine.getName(),
    machineRegistry: state.machineState.selectedMachine.getBank().getMachineRegistry(),
    userRegistry: state.machineState.selectedMachine.getBank().getUserRegistry(),
