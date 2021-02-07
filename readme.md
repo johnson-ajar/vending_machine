@@ -32,7 +32,7 @@ Spring hateoas would be used to add related links within the response data.
 
 > Note: **Make sure nodejs, yarn and npm are installed globally.**
 
-> Note:: **Use the refresh button to reset the sliders to default machine/user coin registry. **
+> Note: **Use the refresh button to reset the sliders to default machine/user coin registry.**
 
 > To install nodejs from Nodesource. 
 >> The script will add the Node source signing key to your system create an apt repository file, install all necessary package, and refresh apt cache.
