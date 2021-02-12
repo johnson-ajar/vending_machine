@@ -1,4 +1,5 @@
 ## Vending Machine Monitoring Application
+![Alt text](./docs/vending_ui.png?raw=true "Vending Machine Monitoring Application")
 ## Application Modules.
 This application contain the following modules under the root folder vending_machine.
 >	- vending_model
