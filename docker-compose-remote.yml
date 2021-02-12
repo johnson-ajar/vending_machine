@@ -1,0 +1,19 @@
+version: '2.1'
+
+services:
+ vending_ui:
+  image: johnson2ajar/vending_machine:vending_ui
+  container_name: vending_ui
+  ports:
+   - "8081:8080"
+  depends_on:
+   - vending_services
+  environment:
+   - SPRING_PROFILES_ACTIVE=docker
+ vending_services:
+  image: johnson2ajar/vending_machine:vending_service
+  container_name: vending_services
+  ports:
+   - "8080:8080"
+  environment:
+   - SPRING_PROFILES_ACTIVE=docker
