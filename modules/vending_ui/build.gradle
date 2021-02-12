@@ -59,4 +59,3 @@ bootRun {
 
 copyDevFrontEnd.dependsOn webpackDevBuild
 bootJar.dependsOn copyDevFrontEnd
-//processResources.dependsOn(webpackDevBuild)
