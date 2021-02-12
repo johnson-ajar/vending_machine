@@ -7,6 +7,7 @@ This application contain the following modules under the root folder vending_mac
 >	- vending_ui
 
 All these modules can be build using the command `./gradlew build` under the root folder vending_machine. Individual modules cannot be build at the moment.
+> Note: **Make sure nodejs, yarn and npm are installed globally.**
 The module vending_application and vending_ui are spring boot application, which contain individual Dockerfile. Details regarding building and running the application is provided below.
 
 ### 1. Module(vending_model).
@@ -25,7 +26,7 @@ The module vending_application and vending_ui are spring boot application, which
  
 ### 3. Module (vending_application)
 > This module contain the implementation of the rest api and entry point to the monitoring application. This is run as a spring boot application at port 7001 outside docker. Inside docker it is run in port 8080. This can be changed in the application.yml. After running gradle build at root. Run `java -jar vending_application.jar` in folder `vending_machine/modules/vending_application/build/libs`, use the following url for the rest api docs `http://localhost:8080/api/v1/swagger-ui.html`.
-Spring hateoas would be used to add related links within the response data.
+Spring hateoas would be used to add discovery links within the response data.
  
 ### 4. Module (vending_ui)
 > This is a separate sping boot application which run the rich web application. This can be used to interact with each machine and monitor the registries of each machine. After running gradle build at root. Run `java -jar vending_ui.jar` in folder `vending_machine/modules/vending_ui/build/libs`, if you want to run the web application outside docker. Use the following url to open the application `http://localhost:8081/vending`. This module contain two source folder src and webclient. src folder contain the java code and webclient contain the javascript web client code. The content in the webclient folder can be build and run separately without the need for spring boot using node using. Check package.json the command available. To build run `yarn build`. To run application use `yarn start`. The application can be opened using the  url `http://localhost:8081/vending/`. To compile the web application code nodejs, yarn and npm is required globally. The instruction provided below are for installing in ubuntu.
