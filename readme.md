@@ -1,7 +1,33 @@
 ## Vending Machine Monitoring Application
+
+### Running the application using docker images.
+Images of the application vending_application and vending_ui has been uploaded into my dockerhub repository `johnson2ajar/vending_machine` and are available to public. They can be downloaded and run locally without the need for build from source.
+
+>> `https://hub.docker.com/repository/docker/johnson2ajar/vending_machine`
+
+>> Use the `runApp.sh` script in the root folder vending_machine to start and stop the application. The runApp.sh uses a separate docker-compose-remote.yml file to pull the following images with the tag.
+
+>> `johnson2ajar/vending_machine:vending_ui`
+
+>> `johnson2ajar/vending_machine:vending_service` 
+
+This approach should avoid the requirement of application build. 
+
+Make sure docker and docker-compose are installed on the machine and doesn't require root privileges.
+
+
+
+Command `docker ps` should display below output, if the images has been pulled and started successfully.
+
+	`CONTAINER ID   IMAGE                                          COMMAND              CREATED         STATUS       PORTS                     NAMES
+	40ec104fb34e   johnson2ajar/vending_machine:vending_ui        "java -jar /app.jar"  7 seconds ago   Up 6 seconds 0.0.0.0:8081->8080/tcp   vending_ui
+	f4b1306a4415   johnson2ajar/vending_machine:vending_service   "java -jar /app.jar"  8 seconds ago   Up 7 seconds 0.0.0.0:8080->8080/tcp   vending_services`
+	
+Now it should be possible to open the application using the url `http://localhost:8081/vending/`, you should see the following application page.
+
 ![Alt text](./docs/vending_ui.png?raw=true "Vending Machine Monitoring Application")
 
-To use the web application follow the steps below.
+### To use the web application follow the steps below.
 
 >> 1) Load the machines into the web application, This makes a rest call to fetch the machine list and its coin registry state.
 
@@ -17,7 +43,7 @@ To use the web application follow the steps below.
 	
 >> 6) The user can re-initialise both the machine coin registry and the user coin registry by using the coin sliders. After making changes submit 	the registry change. This makes a rest call to update the machine coin registry. If the machine registry needs reseting to previous value click 	on refresh button.
 
-If the machine coin registry doesn't have enough coins to provide a change, it returns the changes and reports an error message to the UI indicating lack of funds. If the user provides the exact amount, then payment will be successful.
+If the machine coin registry doesn't have enough coins to provide a change, it returns the user payment amount and reports an error message to the UI indicating lack of funds in the machine coin registry to process the payment and provide change. If the user provides the exact purchase amount, then payment will be successful.
 
 ## Application Modules.
 This application contain the following modules under the root folder vending_machine.
