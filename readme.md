@@ -11,7 +11,7 @@ Images of the application vending_application and vending_ui has been uploaded i
 
 >> `johnson2ajar/vending_machine:vending_service` 
 
-This approach should avoid the requirement of application build. 
+This approach should avoid the requirement of application build from source. 
 
 Make sure docker and docker-compose are installed on the machine and doesn't require root privileges.
 
@@ -41,9 +41,9 @@ Now it should be possible to open the application using the url `http://localhos
 >> 5) After entering the required amount, select submit button to the machine. This makes a rest call to get the change registry.
 	You'll notice that both the machine coin registry and user coin registry of the machine being updated.
 	
->> 6) The user can re-initialise both the machine coin registry and the user coin registry by using the coin sliders. After making changes submit 	the registry change. This makes a rest call to update the machine coin registry. If the machine registry needs reseting to previous value click 	on refresh button.
+>> 6) The user can re-initialise both the machine coin registry and the user coin registry by using the coin sliders. After making changes submit 	the registry change. This makes a rest call to update the machine coin registry. If the machine registry needs resetting to previous original 	value click 	on refresh button.
 
-If the machine coin registry doesn't have enough coins to provide a change, it returns the user payment amount and reports an error message to the UI indicating lack of funds in the machine coin registry to process the payment and provide change. If the user provides the exact purchase amount, then payment will be successful.
+If the machine coin registry doesn't have enough coins to provide a change, it returns the user payment amount and reports an error message to the UI indicating lack of funds in the machine coin registry to process the payment and provide change. When there is insufficient funds in the machine coin registry, the user must provide the exact purchase amount, for the payment request to be successful.
 
 ## Application Modules.
 This application contain the following modules under the root folder vending_machine.
@@ -73,7 +73,7 @@ The module vending_application and vending_ui are spring boot application, which
 > This module provide the definition for the rest api and swagger docs definitions. The documentation for the rest api can be obtained by using the following url `http://localhost:8080/api/v1/swagger-ui.html` when the services are run in docker. If the vending_application is run outside docker after a gradle build, run `java -jar vending_application.jar` in folder `vending_machine/modules/vending_application/build/libs`, use the following url for the rest api docs `http://localhost:8080/api/v1/swagger-ui.html`.
  
 ### 3. Module (vending_application)
-> This module contain the implementation of the rest api and entry point to the monitoring application. This is run as a spring boot application at port 7001 outside docker. Inside docker it is run in port 8080. This can be changed in the application.yml. After running gradle build at root. Run `java -jar vending_application.jar` in folder `vending_machine/modules/vending_application/build/libs`, use the following url for the rest api docs `http://localhost:8080/api/v1/swagger-ui.html`.
+> This module contain the implementation of the rest api and entry point to the monitoring application. This is run as a spring boot application at port 8080 outside docker. Inside docker it is run in port 8080. This can be changed in the application.yml. After running gradle build at root. Run `java -jar vending_application.jar` in folder `vending_machine/modules/vending_application/build/libs`, use the following url for the rest api docs `http://localhost:8080/api/v1/swagger-ui.html`.
 Spring hateoas would be used to add discovery links within the response data.
  
 ### 4. Module (vending_ui)
