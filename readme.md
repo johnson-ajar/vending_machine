@@ -23,7 +23,7 @@ Command `docker ps` should display below output, if the images has been pulled a
 	40ec104fb34e   johnson2ajar/vending_machine:vending_ui        "java -jar /app.jar"  7 seconds ago   Up 6 seconds 0.0.0.0:8081->8080/tcp   vending_ui
 	f4b1306a4415   johnson2ajar/vending_machine:vending_service   "java -jar /app.jar"  8 seconds ago   Up 7 seconds 0.0.0.0:8080->8080/tcp   vending_services`
 	
-Now it should be possible to open the application using the url `http://localhost:8081/vending/`, you should see the following application page.
+Now it should be possible to open the application using the url `http://localhost:8081/vending/`, you should see the following application page. Wait for couple of seconds before opening the url in browser, after runApp.sh finishes for the spring application to start. Run command `docker logs -f vending_services` to see the logs for the vending_service application.
 
 ![Alt text](./docs/vending_ui.png?raw=true "Vending Machine Monitoring Application")
 
