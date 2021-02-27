@@ -27,6 +27,8 @@ export type Action = AnyAction
 let service:MachineService = new MachineService();
 
 export const actionCreators = {
+    //action creators are function objects. Each action has a corresponding function object (event)
+    //The action below handles the events to submit payment, get machines and update registry.
     getMachines:()=>({
         type: GET_MACHINES,
         payload: async () => {
