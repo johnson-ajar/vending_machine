@@ -15,16 +15,6 @@ const rootReducers = combineReducers<AppState>({
     machineState: MachineReducer
 });
 
-/*
-//Creating the root reducers.
-const rootReducer = (state:AppState, action:Action) => {
-    if(action.type === 'RESET_ALL') {
-        console.log("Resetting all state TODO: reset properly");
-    }
-    return appReducers(state, action);
-}
-*/
-
 export type Dispatch = ReduxDispatch<Action>;
 const composeEnhancers = window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']||compose;
 
