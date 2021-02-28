@@ -15,6 +15,7 @@ const rootReducers = combineReducers<AppState>({
     machineState: MachineReducer
 });
 
+
 export type Dispatch = ReduxDispatch<Action>;
 const composeEnhancers = window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']||compose;
 
