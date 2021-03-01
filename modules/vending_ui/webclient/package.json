@@ -24,11 +24,7 @@
     "react-router-dom": "^5.0.1",
     "redux": "4.0.4",
     "redux-thunk": "^2.3.0",
-    "redux-promise-middleware": "5.1.1",
-    "webpack": "^4.25.1",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10",
-    "webpack-merge": "^4.1.4"
+    "redux-promise-middleware": "5.1.1"
   },
   "devDependencies": {
     "@types/node": "^12.6.3",
@@ -58,6 +54,10 @@
     "svg-react-loader": "^0.4.6",
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3",
-    "url-loader": "^1.1.2"
+    "url-loader": "^1.1.2",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10",
+    "webpack-merge": "^4.1.4"
   }
 }
