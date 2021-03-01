@@ -13,11 +13,6 @@ public class VendingBank extends AbstractVendingBank<CoinRegistry>{
 		super(inGroup);
 	}
 	
-	public VendingBank(CoinRegistry registry) {
-		super(registry.getGroup());
-		this.setMachineRegistry(registry);
-	}
-	
 	@Override
 	protected CoinRegistry createMachineRegistry(CoinGroup group) {
 		return CoinTypeFactory.createRegistry(group, false);
