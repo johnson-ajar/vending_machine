@@ -1,5 +1,5 @@
 ## Vending Machine Monitoring Application
-
+Its needs a persistence layer, will be adding soon...
 ### Running the application using docker images.
 Images of the application vending_application and vending_ui has been uploaded into my dockerhub repository `johnson2ajar/vending_machine` and are available to public. They can be downloaded and run locally without the need for build from source.
 
